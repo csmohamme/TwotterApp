@@ -7,8 +7,8 @@
         <strong>Followers</strong> {{ followers }}
       </div>
 
-      <form class="user-profile_createTwoot" @submit.prevent="createNewTwoot">
-        <label for="newTwoot"><strong>New Twoot</strong></label>
+      <form class="user-profile_createTwoot" @submit.prevent="createNewTwoot" :class="{'--exceeded': newTwootCharacterCount > 200}">
+        <label for="newTwoot"><strong>New Twoot </strong>({{ newTwootCharacterCount }} / 200)</label>
         <textarea id="newtwoot" rows="4" v-model="newTwootContent"></textarea>
 
         <div class="user-profile_createTwoot-type">
@@ -16,16 +16,14 @@
           <select id="createTwootType" v-model="selectTwootType">
             <option
               :value="option.value"
-              v-for="(option, index ) in twootType"
+              v-for="(option, index) in twootType"
               :key="index"
             >
               {{ option.name }}
             </option>
           </select>
         </div>
-        <button>
-          Twoot!
-        </button>
+        <button>Twoot!</button>
       </form>
     </div>
     <div class="user-profile_twoots-wrapper">
@@ -47,8 +45,8 @@ export default {
   components: { TwootItem },
   data() {
     return {
-      newTwootContent:'',
-      selectTwootType:'instant',
+      newTwootContent: "",
+      selectTwootType: "instant",
       twootType: [
         { value: "draft", name: "Draft" },
         { value: "instant", name: "Instant twoot" },
@@ -68,6 +66,7 @@ export default {
       },
     };
   },
+
   watch: {
     followers(newFollowAccount, oldFollowAccount) {
       if (oldFollowAccount < newFollowAccount) {
@@ -75,11 +74,13 @@ export default {
       }
     },
   },
+
   computed: {
-    fullName() {
-      return `${this.user.firstname} ${this.user.lastname}`;
-    },
+    newTwootCharacterCount(){
+      return this.newTwootContent.length;
+    }
   },
+
   methods: {
     followUser() {
       this.followers++;
@@ -87,15 +88,16 @@ export default {
     toggleFavourite(id) {
       console.log(`favourite Tweet #${id}`);
     },
-    createNewTwoot(){
-      if(this.newTwootContent && this.selectTwootType !== 'draft'){
+    createNewTwoot() {
+      if (this.newTwootContent && this.selectTwootType !== "draft") {
         this.user.twoots.unshift({
-          id:this.user.twoots.length+1,
-          content:this.newTwootContent,
+          id: this.user.twoots.length + 1,
+          content: this.newTwootContent,
         }),
-        this.newTwootContent = ''
+          (this.newTwootContent = "");
       }
-    }
+    },
+
   },
   mounted() {
     this.followUser();
@@ -103,37 +105,50 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .user-profile {
   display: grid;
   grid-template-columns: 1fr 3fr;
-  width: 100%;
+  grid-gap: 50px;
   padding: 50px 5%;
-}
-.user-profile_user-panel {
-  display: flex;
-  flex-direction: column;
-  margin-right: 58px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 5px;
-  border: 1px solid #dfe3e8;
-}
-.user-profile_admin-badge {
-  background: rebeccapurple;
-  color: #fff;
-  border-radius: 5px;
-  margin-right: auto;
-  padding: 0 10px;
-  font-weight: bold;
-}
-h1 {
-  margin: 0;
-}
-.user-profile_createTwoot {
-  border-top: 1px solid #dfe3e8;
-  padding: 20px 5px;
-  display: flex;
-  flex-direction: column;
+  .user-profile_user-panel {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #dfe3e8;
+    .user-profile_admin-badge {
+      background: rebeccapurple;
+      color: #fff;
+      border-radius: 5px;
+      margin-right: auto;
+      padding: 0 10px;
+      font-weight: bold;
+    }
+    h1 {
+      margin: 0;
+    }
+
+    .user-profile_createTwoot {
+      border-top: 1px solid #dfe3e8;
+      padding: 20px 5px;
+      display: flex;
+      flex-direction: column;
+      &.--exceeded{
+        color:red;
+        border-color: red;
+        button{
+          background-color: red;
+          border: none;
+          color:#dfe3e8;
+        }
+      }
+    }
+  }
+  .user-profile_twoots-wrapper {
+    display: grid;
+    grid-gap: 10px;
+  }
 }
 </style>
