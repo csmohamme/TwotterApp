@@ -2,19 +2,21 @@
   <div class="user-profile">
     <div class="user-profile_sidebar">
       <div class="user-profile_user-panel">
-        <h1 class="user-profile_username">@{{ user.username }}</h1>
-        <div class="user-profile_admin-badge" v-if="user.isAdmin">Admin</div>
+        <h1 class="user-profile_username">@{{ state.user.username }}</h1>
+        <div class="user-profile_admin-badge" v-if="state.user.isAdmin">
+          Admin
+        </div>
         <div class="user-profile_follower-count">
-          <strong>Followers</strong> {{ followers }}
+          <strong>Followers</strong> {{ state.followers }}
         </div>
       </div>
       <CreateTwootPanel @add-twoot="addTwoot" />
     </div>
     <div class="user-profile_twoots-wrapper">
       <TwootItem
-        v-for="twoot in user.twoots"
+        v-for="twoot in state.user.twoots"
         :key="twoot.id"
-        :username="user.username"
+        :username="state.user.username"
         :twoot="twoot"
       />
     </div>
@@ -22,13 +24,18 @@
 </template>
 
 <script>
+import { reactive } from "vue";
+
 import TwootItem from "./TwootItem";
+
 import CreateTwootPanel from "./CreateTwootPanel";
+
 export default {
   name: "userProfile",
   components: { CreateTwootPanel, TwootItem },
-  data() {
-    return {
+
+  setup() {
+    const state = reactive({
       followers: 0,
       user: {
         id: 1,
@@ -42,16 +49,17 @@ export default {
           { id: 2, content: "Don't forget to subscribr" },
         ],
       },
-    };
-  },
-
-  methods: {
-    addTwoot(twoot) {
-      this.user.twoots.unshift({
-        id: this.user.twoots.length + 1,
+    });
+    function addTwoot(twoot) {
+      state.user.twoots.unshift({
+        id: state.user.twoots.length + 1,
         content: twoot,
       });
-    },
+    }
+    return {
+      state,
+      addTwoot,
+    };
   },
 };
 </script>

@@ -4,7 +4,7 @@
       <div class="nav_logo">Twooter</div>
 
       <div class="nav_user">
-        {{ user.username }}
+        {{ state.user.username }}
       </div>
     </nav>
 
@@ -13,16 +13,21 @@
 </template>
 
 <script>
+import { reactive } from "vue";
+
 import userProfile from "./components/userProfile";
 
 export default {
   name: "app",
   components: { userProfile },
-  data() {
-    return {
+  setup() {
+    const state = reactive({
       user: {
         username: "_Mostafa-Muatz",
       },
+    });
+    return {
+      state,
     };
   },
 };
