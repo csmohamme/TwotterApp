@@ -1,30 +1,14 @@
 <template>
   <div class="user-profile">
-    <div class="user-profile_user-panel">
-      <h1 class="user-profile_username">@{{ user.username }}</h1>
-      <div class="user-profile_admin-badge" v-if="user.isAdmin">Admin</div>
-      <div class="user-profile_follower-count">
-        <strong>Followers</strong> {{ followers }}
-      </div>
-
-      <form class="user-profile_createTwoot" @submit.prevent="createNewTwoot" :class="{'--exceeded': newTwootCharacterCount > 200}">
-        <label for="newTwoot"><strong>New Twoot </strong>({{ newTwootCharacterCount }} / 200)</label>
-        <textarea id="newtwoot" rows="4" v-model="newTwootContent"></textarea>
-
-        <div class="user-profile_createTwoot-type">
-          <label for="createTwootType">Type: </label>
-          <select id="createTwootType" v-model="selectTwootType">
-            <option
-              :value="option.value"
-              v-for="(option, index) in twootType"
-              :key="index"
-            >
-              {{ option.name }}
-            </option>
-          </select>
+    <div class="user-profile_sidebar">
+      <div class="user-profile_user-panel">
+        <h1 class="user-profile_username">@{{ user.username }}</h1>
+        <div class="user-profile_admin-badge" v-if="user.isAdmin">Admin</div>
+        <div class="user-profile_follower-count">
+          <strong>Followers</strong> {{ followers }}
         </div>
-        <button>Twoot!</button>
-      </form>
+      </div>
+      <CreateTwootPanel @add-twoot="addTwoot" />
     </div>
     <div class="user-profile_twoots-wrapper">
       <TwootItem
@@ -32,7 +16,6 @@
         :key="twoot.id"
         :username="user.username"
         :twoot="twoot"
-        @favourite="toggleFavourite"
       />
     </div>
   </div>
@@ -40,17 +23,12 @@
 
 <script>
 import TwootItem from "./TwootItem";
+import CreateTwootPanel from "./CreateTwootPanel";
 export default {
   name: "userProfile",
-  components: { TwootItem },
+  components: { CreateTwootPanel, TwootItem },
   data() {
     return {
-      newTwootContent: "",
-      selectTwootType: "instant",
-      twootType: [
-        { value: "draft", name: "Draft" },
-        { value: "instant", name: "Instant twoot" },
-      ],
       followers: 0,
       user: {
         id: 1,
@@ -67,40 +45,13 @@ export default {
     };
   },
 
-  watch: {
-    followers(newFollowAccount, oldFollowAccount) {
-      if (oldFollowAccount < newFollowAccount) {
-        console.log(`${this.user.username} has gaind followers!`);
-      }
-    },
-  },
-
-  computed: {
-    newTwootCharacterCount(){
-      return this.newTwootContent.length;
-    }
-  },
-
   methods: {
-    followUser() {
-      this.followers++;
+    addTwoot(twoot) {
+      this.user.twoots.unshift({
+        id: this.user.twoots.length + 1,
+        content: twoot,
+      });
     },
-    toggleFavourite(id) {
-      console.log(`favourite Tweet #${id}`);
-    },
-    createNewTwoot() {
-      if (this.newTwootContent && this.selectTwootType !== "draft") {
-        this.user.twoots.unshift({
-          id: this.user.twoots.length + 1,
-          content: this.newTwootContent,
-        }),
-          (this.newTwootContent = "");
-      }
-    },
-
-  },
-  mounted() {
-    this.followUser();
   },
 };
 </script>
@@ -111,6 +62,7 @@ export default {
   grid-template-columns: 1fr 3fr;
   grid-gap: 50px;
   padding: 50px 5%;
+
   .user-profile_user-panel {
     display: flex;
     flex-direction: column;
@@ -118,6 +70,12 @@ export default {
     background-color: #fff;
     border-radius: 5px;
     border: 1px solid #dfe3e8;
+    margin-bottom: auto;
+
+    h1 {
+      margin: 0;
+    }
+
     .user-profile_admin-badge {
       background: rebeccapurple;
       color: #fff;
@@ -126,29 +84,11 @@ export default {
       padding: 0 10px;
       font-weight: bold;
     }
-    h1 {
-      margin: 0;
-    }
-
-    .user-profile_createTwoot {
-      border-top: 1px solid #dfe3e8;
-      padding: 20px 5px;
-      display: flex;
-      flex-direction: column;
-      &.--exceeded{
-        color:red;
-        border-color: red;
-        button{
-          background-color: red;
-          border: none;
-          color:#dfe3e8;
-        }
-      }
-    }
   }
   .user-profile_twoots-wrapper {
     display: grid;
     grid-gap: 10px;
+    margin-bottom: auto;
   }
 }
 </style>

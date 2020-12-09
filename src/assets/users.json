@@ -1,0 +1,58 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "username": "_Wad_Muatz",
+            "firstname": "mostafa",
+            "lastname": "muatz",
+            "email": "mostafa@gmail.com",
+            "isAdmin": true,
+            "twoots": [
+                {
+                    "id": 1,
+                    "content": "this is nice"
+                },
+                {
+                    "id": 2,
+                    "content": "Don't forget to subscribr"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "username": "_Koola",
+            "firstname": "Mutoakel",
+            "lastname": "Hatem",
+            "email": "koola@gmail.com",
+            "isAdmin": true,
+            "twoots": [
+                {
+                    "id": 1,
+                    "content": "this is test"
+                },
+                {
+                    "id": 2,
+                    "content": "Don't forget to subscribr"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "username": "_Ali",
+            "firstname": "Ali",
+            "lastname": "Helme",
+            "email": "Ali@gmail.com",
+            "isAdmin": true,
+            "twoots": [
+                {
+                    "id": 1,
+                    "content": "this is test"
+                },
+                {
+                    "id": 2,
+                    "content": "Don't forget to subscribr"
+                }
+            ]
+        }
+    ]
+}
